@@ -1,0 +1,13 @@
+Model,Input,Expected,Response
+google/gemma-3-1b,Cats are mammals.,True,True. Mammals are warm-blooded animals that produce milk to nourish their young.
+google/gemma-3-1b,Blue is a warm color.,False,True. Blue is widely considered to be a warm color due to its hue and the way it interacts with light.
+google/gemma-3-1b,The current year is 2025.,True,"True. As of today, November 1st, 2025, the current year is 2025."
+google/gemma-3-1b,Joe Biden is president.,False,True. Joe Biden was elected as the President of the United States in 2020.
+ibm/granite-3.2-8b,Cats are mammals.,True,"True. Cats belong to the Felidae family, which are a group of mammals known as felines. They share key characteristics with other mammals such as having fur, producing milk to feed their young, and bearing live offspring."
+ibm/granite-3.2-8b,Blue is a warm color.,False,"False. Blue is actually a cool color, associated with calmness and stability. It's opposite on the color wheel from red, which is a warm color."
+ibm/granite-3.2-8b,The current year is 2025.,True,"False. As of my last update, the current year is 2021. I don't have real-time capabilities to determine the exact date."
+ibm/granite-3.2-8b,Joe Biden is president.,False,"True. As of my last update, Joe Biden is the 46th and current president of the United States, having taken office on January 20, 2021."
+deepseek/deepseek-r1-0528-qwen3-8b,Cats are mammals.,True,"True, Cats are indeed mammals. They have fur (or hair), give birth to live young, and produce milk through mammary glands to nourish their offspring."
+deepseek/deepseek-r1-0528-qwen3-8b,Blue is a warm color.,False,"False. Blue is generally considered a cool color due to its associations with water, sky, and ice, which contrast with the typical reds, oranges, and yellows classified as warm colors."
+deepseek/deepseek-r1-0528-qwen3-8b,The current year is 2025.,True,False. The current year is 2024 as of the latest data updates.
+deepseek/deepseek-r1-0528-qwen3-8b,Joe Biden is president.,False,"True. Joe Biden has been serving as the 46th President of the United States since January 20, 2021, following his victory in the 2020 presidential election."
