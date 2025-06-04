@@ -2,11 +2,14 @@ import requests
 import csv
 from datetime import date
 from googleapiclient.discovery import build
+import os
+from dotenv import load_dotenv
 
-search_id = "e11ea7739f91c4174"
-api_key = "AIzaSyDN9-FruLC5fdPd0pfFMaQ0MHj9gt9eg1A"
+load_dotenv()
+api_key = os.getenv("API_KEY")
+search_id = os.getenv("SEARCH_ID")
 
-def google_custom_search(query, num_results=10):
+def google_custom_search(query, num_results=1):
     """ Pulls the top 10 results from a google search with the provided query.
     """
     service = build("customsearch", "v1", developerKey=api_key)
@@ -26,13 +29,13 @@ def test_getting_urls(query):
 
     if 'items' in results:
         print(f"Search results for '{query}':")
-        with open('search_results.csv', 'a', newline='', encoding='utf-8') as outfile:
+        with open('search_results_tests.csv', 'a', newline='', encoding='utf-8') as outfile:
             writer = csv.writer(outfile)
             for i, item in enumerate(results['items']):
                 print(item['title'])
                 writer.writerow([date.today(), query, item['title'], item['link'], item.get('snippet', '')])
 
-query = "economy"
+query = "test"
 
 test_getting_urls(query)
 
