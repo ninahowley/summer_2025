@@ -51,7 +51,7 @@ def test_bot(model, inputs, prompt):
             print(f"Statement: {input}")
             print(f"Response: {response[-1]}", "\n")
 
-            with open('tests.csv', 'a', newline='') as outfile:
+            with open('fact_checking.csv', 'a', newline='', encoding='utf-8') as outfile:
                 writer = csv.writer(outfile)
                 writer.writerow([model, input, inputs[input], response[-1]])
 
