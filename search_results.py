@@ -32,7 +32,7 @@ def test_getting_urls(query):
                 print(item['title'])
                 writer.writerow([date.today(), query, item['title'], item['link'], item.get('snippet', '')])
 
-query = "art"
+query = "economy"
 
 test_getting_urls(query)
 
