@@ -1,15 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
-import time
-import sqlite3
 import csv
-import re
 from datetime import date
 
 def reset_csv():
     with open("bbc_articles.csv", "w", newline='', encoding="UTF-8") as outfile:
         writer = csv.writer(outfile)
-        writer.writerow(['date','type','topic','title','text','url'])
+        writer.writerow(['date','type','topic','title', 'url', 'text'])
 
 def run_scraping():
     html = requests.get("https://www.bbc.com/")
@@ -42,7 +39,7 @@ def run_scraping():
                     type = "Video"
                     topic = parts[4].capitalize()
                     text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
-                writer.writerow([date.today(),type, topic, title, text, url])
+                writer.writerow([date.today(),type, topic, title, url, text])
 
 #run this once a day
-#run_scraping()
+# run_scraping()
