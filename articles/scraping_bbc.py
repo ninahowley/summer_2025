@@ -4,7 +4,7 @@ import csv
 from datetime import date
 
 # def reset_csv():
-with open("bbc_articles.csv", "w", newline='', encoding="UTF-8") as outfile:
+with open("bbc_all.csv", "w", newline='', encoding="UTF-8") as outfile:
     writer = csv.writer(outfile)
     writer.writerow(['date','type','topic','title', 'url', 'text'])
 
@@ -13,7 +13,7 @@ html = requests.get("https://www.bbc.com/")
 soup = BeautifulSoup(html.text, "html.parser")
 items = soup.find_all(attrs={"data-testid":"dundee-card"})
 
-with open("bbc_articles.csv", "a", newline='', encoding = "UTF-8") as outfile:
+with open("bbc_all.csv", "a", newline='', encoding = "UTF-8") as outfile:
     writer = csv.writer(outfile)
     for item in items:
 
