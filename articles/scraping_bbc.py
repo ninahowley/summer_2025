@@ -26,15 +26,18 @@ with open("bbc_articles.csv", "a", newline='', encoding = "UTF-8") as outfile:
         title = item.find(attrs={"data-testid":"card-headline"}).text
 
         if url:
+    
+            html = requests.get(url)
+            soup = BeautifulSoup(html.text, "html.parser")
+
             parts = url.split("/")
-        
+
             if "article" in parts or "articles" in parts:
                 type = "Article"
                 topic = parts[4].capitalize()
+                text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) 
             elif "video" in parts or "videos" in parts:
                 type = "Video"
                 topic = parts[4].capitalize()
-            else:
-                type=None
-                topic=None
-            writer.writerow([date.today(),type, topic, title,None,url])
+                text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
+            writer.writerow([date.today(),type, topic, title, text, url])
