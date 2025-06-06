@@ -7,11 +7,20 @@ import pandas
 
 def reset_csv():
     """
-    Reset csv
+    Reset CSV.
     """
     with open("bbc_news.csv", "w", newline='', encoding="UTF-8") as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['date','type','title', 'url', 'text'])
+
+def get_urls():
+    """
+    Returns a list of URLS present in CSV.
+    Use for avoidance of duplicates.
+    """
+    with open("bbc_news.csv", 'r', newline='') as infile:
+        reader = csv.reader(infile)
+        return [row[3] for row in reader]
 
 def run_scraping():
     """
@@ -20,34 +29,33 @@ def run_scraping():
     html = requests.get("https://www.bbc.com/news")
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
-
+    urls = get_urls()
     with open("bbc_news.csv", "a", newline='', encoding = "UTF-8") as outfile:
         writer = csv.writer(outfile)
         for item in items:
-
             link = item.find(attrs={"data-testid":"internal-link"})
             if link:
                 url = "https://www.bbc.com/" + link['href']
+                urls.append(url)
             else:
                 url = None
             title = item.find(attrs={"data-testid":"card-headline"}).text
-
             if url:
-        
-                html = requests.get(url)
-                soup = BeautifulSoup(html.text, "html.parser")
+                if url not in urls:
+                    html = requests.get(url)
+                    soup = BeautifulSoup(html.text, "html.parser")
 
-                parts = url.split("/")
-                topic = parts[4]
+                    parts = url.split("/")
+                    topic = parts[4]
 
-                if topic == "news":
-                    if "article" in parts or "articles" in parts:
-                        type = "Article"
-                        text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) 
-                    elif "video" in parts or "videos" in parts:
-                        type = "Video"
-                        text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
-                    writer.writerow([date.today(),type, title, url, text])
+                    if topic == "news":
+                        if "article" in parts or "articles" in parts:
+                            type = "Article"
+                            text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) 
+                        elif "video" in parts or "videos" in parts:
+                            type = "Video"
+                            text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
+                        writer.writerow([date.today(),type, title, url, text])
 
 def run_scraping_past(archive_url, date):
     """
@@ -56,40 +64,39 @@ def run_scraping_past(archive_url, date):
     html = requests.get(archive_url)
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
+    urls = get_urls()
     with open("bbc_news.csv", "a", newline='', encoding = "UTF-8") as outfile:
         writer = csv.writer(outfile)
         for item in items:
-
             link = item.find(attrs={"data-testid":"internal-link"})
-
             if link:
                 url = "https" + (link['href'].split("https"))[-1]
+                urls.append(url)
             else:
                 url = None
             title = item.find(attrs={"data-testid":"card-headline"}).text
-
             if url:
-                html = requests.get(url)
-                soup = BeautifulSoup(html.text, "html.parser")
-                
-                parts = url.split("/")
-                topic = parts[3]
+                if url not in urls:
+                    html = requests.get(url)
+                    soup = BeautifulSoup(html.text, "html.parser")
+                    
+                    parts = url.split("/")
+                    topic = parts[3]
 
-                if topic == "news":
-                    if "article" in parts or "articles" in parts:
-                        type = "Article"
-                        text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) 
-                    elif "video" in parts or "videos" in parts:
-                        type = "Video"
-                        text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
-                    writer.writerow([date, type, title, url, text])
+                    if topic == "news":
+                        if "article" in parts or "articles" in parts:
+                            type = "Article"
+                            text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) 
+                        elif "video" in parts or "videos" in parts:
+                            type = "Video"
+                            text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
+                        writer.writerow([date, type, title, url, text])
 
 def sort_csv(file, sort_column):
     """
     Sorts CSV by date and removes duplicate entries.
     Use after running run_scraping_past().
     """
-    urls = []
     with open(file, 'r', newline='') as infile, open("temp.csv", 'w', newline='') as outfile:
         reader = csv.reader(infile)
         header = next(reader)
@@ -111,11 +118,11 @@ def sort_csv(file, sort_column):
 #run this once a day
 
 # reset_csv()
+
 # run_scraping()
+# sort_csv("bbc_news.csv", 0)
 
 #run this with a webarchive link to get past articles --> choose first time after noon
 #examples:
 # run_scraping_past("https://web.archive.org/web/20250604121145/https://www.bbc.com/news", "2025-06-04")
 # run_scraping_past("https://web.archive.org/web/20250603121113/https://www.bbc.com/news", "2025-06-03")
-
-sort_csv("bbc_news.csv", 0)
