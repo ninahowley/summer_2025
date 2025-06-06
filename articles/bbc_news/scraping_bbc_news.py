@@ -2,13 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from datetime import date
+import os
+import pandas
 
 def reset_csv():
+    """
+    Reset csv
+    """
     with open("bbc_news.csv", "w", newline='', encoding="UTF-8") as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['date','type','title', 'url', 'text'])
 
 def run_scraping():
+    """
+    Run scraping on the BBC news website for the current day.
+    """
     html = requests.get("https://www.bbc.com/news")
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
@@ -42,6 +50,9 @@ def run_scraping():
                     writer.writerow([date.today(),type, title, url, text])
 
 def run_scraping_past(archive_url, date):
+    """
+    Run scraping on the BBC news website for a past date.
+    """
     html = requests.get(archive_url)
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
@@ -73,6 +84,30 @@ def run_scraping_past(archive_url, date):
                         text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
                     writer.writerow([date, type, title, url, text])
 
+def sort_csv(file, sort_column):
+    """
+    Sorts CSV by date and removes duplicate entries.
+    Use after running run_scraping_past().
+    """
+    urls = []
+    with open(file, 'r', newline='') as infile, open("temp.csv", 'w', newline='') as outfile:
+        reader = csv.reader(infile)
+        header = next(reader)
+        sorted_rows = sorted(reader, key=lambda row: row[sort_column])
+        writer = csv.writer(outfile)
+        writer.writerow(header)
+        writer.writerows(sorted_rows)
+    with open("temp.csv", 'r', newline='') as infile, open(file, 'w', newline='') as outfile:
+        reader = csv.reader(infile)
+        header = next(reader)
+        writer = csv.writer(outfile)
+        writer.writerow(header)
+        writer.writerows(sorted_rows)
+    try:
+        os.remove("temp.csv")
+    except Exception:
+        pass 
+
 #run this once a day
 
 # reset_csv()
@@ -82,3 +117,5 @@ def run_scraping_past(archive_url, date):
 #examples:
 # run_scraping_past("https://web.archive.org/web/20250604121145/https://www.bbc.com/news", "2025-06-04")
 # run_scraping_past("https://web.archive.org/web/20250603121113/https://www.bbc.com/news", "2025-06-03")
+
+sort_csv("bbc_news.csv", 0)
