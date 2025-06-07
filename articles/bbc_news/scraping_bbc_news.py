@@ -18,7 +18,7 @@ def get_urls():
     Returns a list of URLS present in CSV.
     Use for avoidance of duplicates.
     """
-    with open("bbc_news.csv", 'r', newline='') as infile:
+    with open("bbc_news.csv", 'r', newline='', encoding = "UTF-8") as infile:
         reader = csv.reader(infile)
         return [row[3] for row in reader]
 
@@ -97,7 +97,7 @@ def sort_csv(file, sort_column):
     Sorts CSV by date and removes duplicate entries.
     Use after running run_scraping_past().
     """
-    with open(file, 'r', newline='') as infile, open("temp.csv", 'w', newline='') as outfile:
+    with open(file, 'r', newline='', encoding = "UTF-8") as infile, open("temp.csv", 'w', newline='', encoding = "UTF-8") as outfile:
         reader = csv.reader(infile)
         header = next(reader)
         sorted_rows = sorted(reader, key=lambda row: row[sort_column])
@@ -119,7 +119,7 @@ def sort_csv(file, sort_column):
 
 # reset_csv()
 
-# run_scraping()
+run_scraping()
 # sort_csv("bbc_news.csv", 0)
 
 #run this with a webarchive link to get past articles --> choose first time after noon

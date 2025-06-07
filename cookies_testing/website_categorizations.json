@@ -1,0 +1,83 @@
+[
+    {
+        "url": "https://www.amazon.com/",
+        "categorization": {
+            "main_category_number": 2,
+            "main_category_name": "Shopping & Services",
+            "sub_category_number": 1,
+            "sub_category_name": "E-commerce & Retail"
+        }
+    },
+    {
+        "url": "https://discord.com/",
+        "categorization": {
+            "main_category_number": 3,
+            "main_category_name": "Social & Communication",
+            "sub_category_number": 3,
+            "sub_category_name": "Messaging & Collaboration Tools"
+        }
+    },
+    {
+        "url": "https://www.twitch.tv/",
+        "categorization": {
+            "main_category_number": 4,
+            "main_category_name": "Entertainment & Leisure",
+            "sub_category_number": 2,
+            "sub_category_name": "Gaming & Interactive Fun"
+        }
+    },
+    {
+        "url": "https://www.coursera.org/",
+        "categorization": {
+            "main_category_number": 5,
+            "main_category_name": "Education & Reference",
+            "sub_category_number": 1,
+            "sub_category_name": "Online Learning Platforms"
+        }
+    },
+    {
+        "url": "https://github.com/",
+        "categorization": {
+            "main_category_number": 6,
+            "main_category_name": "Business & Professional",
+            "sub_category_number": 1,
+            "sub_category_name": "Corporate & Brand Presence"
+        }
+    },
+    {
+        "url": "https://www.google.com/",
+        "categorization": {
+            "main_category_number": 1,
+            "main_category_name": "Information & News",
+            "sub_category_number": 3,
+            "sub_category_name": "Public & Government Services"
+        }
+    },
+    {
+        "url": "https://www.espn.com/",
+        "categorization": {
+            "main_category_number": 4,
+            "main_category_name": "Entertainment & Leisure",
+            "sub_category_number": 1,
+            "sub_category_name": "Streaming & Digital Media"
+        }
+    },
+    {
+        "url": "https://www.nasa.gov/",
+        "categorization": {
+            "main_category_number": 1,
+            "main_category_name": "Information & News",
+            "sub_category_number": 3,
+            "sub_category_name": "Public & Government Services"
+        }
+    },
+    {
+        "url": "https://www.zillow.com/",
+        "categorization": {
+            "main_category_number": 6,
+            "main_category_name": "Business & Professional",
+            "sub_category_number": 3,
+            "sub_category_name": "Finance, Investment & Career"
+        }
+    }
+]

@@ -16,7 +16,7 @@ def get_urls():
     Returns a list of URLS present in CSV.
     Use for avoidance of duplicates.
     """
-    with open("bbc_news.csv", 'r', newline='') as infile:
+    with open("bbc_all.csv", 'r', newline='', encoding = "UTF-8") as infile:
         reader = csv.reader(infile)
         return [row[3] for row in reader]
 
@@ -60,6 +60,6 @@ def run_scraping():
 
 # run this once a day
 
-# run_scraping()
+run_scraping()
 
 
