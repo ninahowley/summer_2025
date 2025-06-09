@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-from datetime import date
+from datetime import date, datetime
 
 def reset_csv():
     """
@@ -28,13 +28,16 @@ def run_scraping():
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
     urls = get_urls()
+
+    date_unformatted = datetime.strptime(str(date.today()), "%Y-%m-%d")
+    date_formatted = date_unformatted.strftime("%#m/%#d/%Y")
+
     with open("bbc_all.csv", "a", newline='', encoding = "UTF-8") as outfile:
         writer = csv.writer(outfile)
         for item in items:
             link = item.find(attrs={"data-testid":"internal-link"})
             if link:
                 url = "https://www.bbc.com/" + link['href']
-                urls.append(url)
             else:
                 url = None
             title = item.find(attrs={"data-testid":"card-headline"}).text
@@ -56,7 +59,8 @@ def run_scraping():
                         type = "Video"
                         topic = parts[4].capitalize()
                         text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
-                    writer.writerow([date.today(),type, topic, title, url, text])
+                    writer.writerow([date_formatted,type, topic, title, url, text])
+                    urls.append(url)
 
 # run this once a day
 

@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-from datetime import date
+from datetime import date, datetime
 import os
 import pandas
 
@@ -30,13 +30,16 @@ def run_scraping():
     soup = BeautifulSoup(html.text, "html.parser")
     items = soup.find_all(attrs={"data-testid":"dundee-card"})
     urls = get_urls()
+
+    date_unformatted = datetime.strptime(str(date.today()), "%Y-%m-%d")
+    date_formatted = date_unformatted.strftime("%#m/%#d/%Y")
+
     with open("bbc_news.csv", "a", newline='', encoding = "UTF-8") as outfile:
         writer = csv.writer(outfile)
         for item in items:
             link = item.find(attrs={"data-testid":"internal-link"})
             if link:
                 url = "https://www.bbc.com/" + link['href']
-                urls.append(url)
             else:
                 url = None
             title = item.find(attrs={"data-testid":"card-headline"}).text
@@ -55,7 +58,8 @@ def run_scraping():
                         elif "video" in parts or "videos" in parts:
                             type = "Video"
                             text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
-                        writer.writerow([date.today(),type, title, url, text])
+                        writer.writerow([date_formatted,type, title, url, text])
+                        urls.append(url)
 
 def run_scraping_past(archive_url, date):
     """
@@ -71,7 +75,6 @@ def run_scraping_past(archive_url, date):
             link = item.find(attrs={"data-testid":"internal-link"})
             if link:
                 url = "https" + (link['href'].split("https"))[-1]
-                urls.append(url)
             else:
                 url = None
             title = item.find(attrs={"data-testid":"card-headline"}).text
@@ -91,6 +94,7 @@ def run_scraping_past(archive_url, date):
                             type = "Video"
                             text = " ".join([content.text for content in (soup.find_all(attrs={"class":"sc-9a00e533-0 hxuGS"}))]) #})[:-2])])
                         writer.writerow([date, type, title, url, text])
+                        urls.append(url)
 
 def sort_csv(file, sort_column):
     """
@@ -104,7 +108,7 @@ def sort_csv(file, sort_column):
         writer = csv.writer(outfile)
         writer.writerow(header)
         writer.writerows(sorted_rows)
-    with open("temp.csv", 'r', newline='') as infile, open(file, 'w', newline='') as outfile:
+    with open("temp.csv", 'r', newline='', encoding = "UTF-8") as infile, open(file, 'w', newline='', encoding="UTF-8") as outfile:
         reader = csv.reader(infile)
         header = next(reader)
         writer = csv.writer(outfile)
@@ -113,16 +117,21 @@ def sort_csv(file, sort_column):
     try:
         os.remove("temp.csv")
     except Exception:
-        pass 
+        pass
 
 #run this once a day
 
 # reset_csv()
 
-run_scraping()
+# run_scraping()
 # sort_csv("bbc_news.csv", 0)
 
 #run this with a webarchive link to get past articles --> choose first time after noon
-#examples:
-# run_scraping_past("https://web.archive.org/web/20250604121145/https://www.bbc.com/news", "2025-06-04")
-# run_scraping_past("https://web.archive.org/web/20250603121113/https://www.bbc.com/news", "2025-06-03")
+#example:
+# run_scraping_past("https://web.archive.org/web/20250604121145/https://www.bbc.com/news", "6/4/2025")
+
+# run_scraping_past("https://web.archive.org/web/20250607121137/https://www.bbc.com/news", "6/7/2025")
+# run_scraping()
+
+# sort_csv("bbc_news.csv", 0)
+
