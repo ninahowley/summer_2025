@@ -126,8 +126,11 @@ def sort_csv(file, sort_column):
 # run this once a day
 
 # run_scraping()
-
 # run_scraping_past("https://web.archive.org/web/20250607120904/https://www.bbc.com/", "6/7/2025")
-
 # sort_csv("bbc_all.csv", 0)
+
+run_scraping()
+sort_csv("bbc_all.csv", 0)
+
+
 

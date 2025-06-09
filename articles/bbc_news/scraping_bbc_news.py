@@ -130,8 +130,6 @@ def sort_csv(file, sort_column):
 #example:
 # run_scraping_past("https://web.archive.org/web/20250604121145/https://www.bbc.com/news", "6/4/2025")
 
-# run_scraping_past("https://web.archive.org/web/20250607121137/https://www.bbc.com/news", "6/7/2025")
-# run_scraping()
-
-# sort_csv("bbc_news.csv", 0)
+run_scraping()
+sort_csv("bbc_news.csv", 0)
 
