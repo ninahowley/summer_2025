@@ -3,6 +3,17 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from urllib.parse import urlparse
 from selenium.common.exceptions import StaleElementReferenceException # Import the specific exception
+import requests
+import json
+
+# import os
+# from dotenv import load_dotenv
+
+# load_dotenv()
+# api_key = os.getenv("API_KEY")
+# api_endpoint = "https://safeBrowsing.googleapis.com/v4/threatMatches:find"
+# CLIENT_ID = "cookies_credbot"
+# CLIENT_VERSION = "1.0.0"
 
 options = webdriver.ChromeOptions()
 driver = webdriver.Chrome(options=options)
@@ -55,19 +66,25 @@ def get_cookies(url: str):
                 print("  [DEBUG] StaleElementReferenceException caught. Skipping this element.")
                 continue
 
-        if third_party_domains:
-            for domain in sorted(list(third_party_domains)):
-                print(f"- {domain}")
+        # if third_party_domains:
+        #     for domain in sorted(list(third_party_domains)):
+        #         print(f"- {domain}")
     finally:
         driver.quit()
 
     return (len(all_current_cookies), first_party_cookies, sorted(list(third_party_domains)))
 
-def get_thirdparty_percent(cookies: tuple):
-    return f"{str(len(cookies[2]) / cookies[0])[2:]}% third party cookies"
+def get_thirdparty_percent(cookies: tuple) -> str:
+    if not cookies[0] == 0:
+        percent = f"{str(len(cookies[2]) / cookies[0])[2:]}"
+        if len(percent) > 2:
+            percent = f"{percent[:2]}.{percent[2:]}"
+        return f"{percent}% third party cookies"
+    return "0% third party cookies"
 
-def analyze_cookies(cookies: tuple):
+def analyze_cookies(cookies: tuple) -> dict:
     return
 
 cookies = get_cookies("https://www.bbc.com/news/articles/cd7gp8l1241o")
 print(get_thirdparty_percent(cookies))
+print(analyze_cookies(cookies))
