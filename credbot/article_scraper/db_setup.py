@@ -30,11 +30,15 @@ def reset_db():
         DROP TABLE IF EXISTS articles
     ''')
 
-def insert_page(conn, name:str, domain:str, url:str, bias:str, credibility:str, reporting:str, content:str) -> None:
+def insert_page(conn, name:str, domain:str, url:str, bias:str, credibility:str, reporting:str, questionable:str, content:str) -> None:
     cur = conn.cursor()
     dupe = cur.execute("SELECT * FROM articles WHERE url = ?", (url,)).fetchone()
     if not dupe:
-        cur.execute("INSERT INTO articles (name, domain, url, bias, credibility, reporting, content) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, domain, url, bias, credibility, reporting, content,))
+        if questionable:
+            cur.execute("INSERT INTO articles (name, domain, url, bias, credibility, reporting, questionable, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (name, domain, url, bias, credibility, reporting, questionable, content,))
+        else:
+            cur.execute("INSERT INTO articles (name, domain, url, bias, credibility, reporting, content) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, domain, url, bias, credibility, reporting, content,))
+
     else:
         print("This page is already in the database.")
 
@@ -44,8 +48,5 @@ def commit_changes(conn):
 def close_db(conn):
     conn.close()
 
-if __name__ == "__main__":
-    init_db()
-
-# reset_db()
-# init_db()
+# if __name__ == "__main__":
+#     init_db()
