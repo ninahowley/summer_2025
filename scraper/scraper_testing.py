@@ -51,7 +51,7 @@ def scrape_url(domain_url:str, url:str) -> str:
         try:
             response = requests.get(url)
             soup = BeautifulSoup(response.text, "html.parser")
-            tags = soup.find_all(['p', 'h1', 'h2', 'h3'])
+            tags = soup.find_all(['p', 'h1', 'h2', 'h3', "li"])
             text = []
             for tag in tags:
                 text.append(tag.get_text(separator=' ', strip=True))
