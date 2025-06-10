@@ -6,6 +6,9 @@ import tempfile
 
 import methods as m
 
+#cd cookies_streamlit
+#python -m streamlit run cookies_streamlit.py
+
 st.set_page_config(
         page_title="Cookies Streamlit",
         layout="centered")
