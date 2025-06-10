@@ -17,6 +17,7 @@ def init_db():
             bias TEXT,
             credibility TEXT,
             reporting TEXT,
+            questionable TEXT,
             content TEXT
         )
     ''')

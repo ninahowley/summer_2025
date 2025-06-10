@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import db_setup
 import csv
-from datetime import time
+import time
 import random
 
 def get_urls(domain_url: str) -> list:
@@ -11,22 +11,34 @@ def get_urls(domain_url: str) -> list:
     """
     try:
         domain = f"https://{domain_url}"
-        html = requests.get(domain)
+        try:
+            html = requests.get(domain, timeout=5)
+        except requests.exceptions.Timeout:
+            print("The request timed out.")
+            return None
         soup = BeautifulSoup(html.text, "html.parser")
         links = soup.find_all("a")
         urls = []
         for link in links:
             l = link.get('href')
-            if len(l) > len(domain)+15:
-                if (l != "https://www."+domain_url) and (l != "https://www."+domain_url+"/"):
-                    if "https" in l:
-                        urls.append(l)
-                    else:
-                        if domain_url[-1] != "/":
-                            urls.append(f"{domain_url}/{l}")
-                        else:
-                            urls.append(f"{domain_url}{l}")
-        return urls
+            if l:
+                if len(l) > len(domain)+15:
+                    if (l != "https://www."+domain_url) and (l != "https://www."+domain_url+"/"):
+                        if ("/category/" not in l) and ("/author/" not in l) and ("/topics/" not in l) and ("?" not in l) and ("-" in l):
+                            if domain_url in l:
+                                if "https" in l:
+                                    urls.append(l)
+                                else:
+                                    if domain_url[-1] != "/":
+                                        urls.append(f"{domain_url}/{l}")
+                                    else:
+                                        urls.append(f"{domain_url}{l}")
+
+        if urls:
+            urls = list(set(urls))
+            urls = sorted(urls, key=lambda url: len(url), reverse=True)
+            return urls
+        return None
     except Exception:
         return None
 
@@ -46,9 +58,11 @@ def scrape_url(domain_url:str, url:str) -> str:
             content = '\n'.join(text)
             return content
         except Exception:
+            return None
             pass
     else:
         print("URL is external from domain.")
+        return None
 
 def scrape_from_csv():
     """
@@ -68,33 +82,37 @@ def scrape_from_csv():
         bias = d['bias']
         credibility = d['credibility']
         reporting = d['reporting']
+        questionable = ",".join(d['questionable'])
 
         try:
             urls = get_urls(domain)
             num_urls = len(urls)
             if num_urls > 10:
-
+                num = 0
                 nums_checked = []
-                while len(nums_checked)<3:
+                while len(nums_checked)<1:
 
-                    num = random.randint(4,num_urls-4)
+                    # num = random.randint(3,num_urls-3)
+
                     content = scrape_url(domain, urls[num])
+                    length = len(content.split(" "))
 
-                    if num not in nums_checked and len(content.split(" ")) > 250:
-                        print(f"{len(nums_checked)+1}: {urls[num]}")
-                        print(f"Word count: {len(content.split(' '))}")
+                    if num not in nums_checked and length > 100:
+                        print(f"{num}: {urls[num]}")
+                        print(f"Word count: {length}")
                         db_setup.insert_page(conn, name, domain, urls[num], bias, credibility, reporting, content)
                         nums_checked.append(num)
-
+                        num+=1
                     else:
-                        continue
+                        break
             db_setup.commit_changes(conn)
-        except Exception:
+        except Exception as e:
             continue
     db_setup.close_db(conn)
 
-
 scrape_from_csv()
+
+#ran until _, delete to there in csv and rerun
 
 #testing
 
