@@ -18,7 +18,7 @@ def scrape_from_csv():
         for row in reader:
             data.append(row)
 
-    # with jsonlines.open("articles.jsonl", 'w') as outfile:
+    with jsonlines.open("articles.jsonl", 'w') as outfile:
 
         for d in data:
             info = None
