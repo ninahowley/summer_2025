@@ -36,7 +36,7 @@ def articlesdb_to_jsons():
     
     for d in data:
         line = {"id":d[0], "name":d[1], "domain":d[2], "bias":d[3], "credibility":d[4], "reporting":d[5], "questionable":d[6], "url":d[7], "title":d[8], "content": parseHTML(d[9])}
-        with open(f"articles/article-{line['id']}.json", "w") as outfile:
+        with open(f"data/article-{line['id']}.json", "w") as outfile:
             json.dump(line, outfile)
 
 articlesdb_to_jsons()
