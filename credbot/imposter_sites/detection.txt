@@ -1,0 +1,32 @@
+Threshold: 0
+Correct: 3/6
+
+Threshold: 1
+Correct: 3/6
+
+Threshold: 2
+Correct: 4/6
+
+Threshold: 3
+Correct: 6/6
+
+Threshold: 4
+Correct: 6/6
+
+Threshold: 5
+Correct: 6/6
+
+Threshold: 6
+Correct: 6/6
+
+Threshold: 7
+Correct: 5/6
+
+Threshold: 8
+Correct: 3/6
+
+Threshold: 9
+Correct: 3/6
+
+Threshold: 10
+Correct: 3/6
