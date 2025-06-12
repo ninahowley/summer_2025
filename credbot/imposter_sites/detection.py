@@ -41,7 +41,7 @@ def get_url_text(url:str) -> str:
         print(e)
         return ""
 
-def detect_imposter(site_text: list, threshold: int) -> bool:
+def detect_imposter(site_text: list, threshold: int, amount:int) -> bool:
     """
     Returns a boolean indicating whether a given site is an imposter, 
     based on whether any lines are repeated a number of times at or above the threshold.
@@ -49,18 +49,13 @@ def detect_imposter(site_text: list, threshold: int) -> bool:
     if site_text:
         l = pd.DataFrame(site_text)
         lines = l.value_counts()
-        highest = lines.head(1)
-        num = highest.iloc[0]
-
-        if num >= threshold:
-            # print(f"This website is an imposter or is otherwise suspicious based on the given repetition threshold of {threshold}.")
-            # print(f"The following line is repeated {num} times.")
-            # print(f'"{highest.index[0][0]}"')
-            return True
-        else:
-            # print(f"This website does not appear to be suspicious based on the given repetition threshold of {threshold}.")
-            return False
-    return
+        highest = lines.head(amount)
+        nums = [num for num in highest]
+        for num in nums:
+            if num < threshold:
+                return False
+        return True
+    return None
 
 def reset_csv():
     with open('detection.csv', 'w', newline='', encoding='utf-8') as outfile:
@@ -71,18 +66,19 @@ def test_urls(url_dict:dict) -> None:
     with open('detection.csv', 'a', newline='', encoding='utf-8') as outfile:
         with open('detection.txt', 'w') as file:
             writer = csv.writer(outfile)
-            for i in range(0,11):
-                correct = 0
-                for url in url_dict:
-                    text = get_url_text(url)
-                    detected = detect_imposter(text, i)
-                    writer.writerow([url, url_dict[url], detected, i])
-                    if url_dict[url] == detected:
-                        correct += 1
-                if i!=0:
-                     file.write("\n\n")
-                file.write(f"Threshold: {i}")
-                file.write(f"\nCorrect: {correct}/{len(url_dict)}")
+            file.write("Where Threshold is the number of times a line must repeat to be considered suspicious,\nand Amount is the minimum number of suspicious lines that make a website an imposter.")
+            for t in range(1,11):
+                for a in range(1, 6):
+                    correct = 0
+                    for url in url_dict:
+                        text = get_url_text(url)
+                        detected = detect_imposter(text, t, a)
+                        writer.writerow([url, url_dict[url], detected, t])
+                        if url_dict[url] == detected:
+                            correct += 1
+                    file.write(f"\n\nThreshold: {t}")
+                    file.write(f"\nAmount: {a}")
+                    file.write(f"\nCorrect: {correct}/{len(url_dict)}")
     
 reset_csv()
 
