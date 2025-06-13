@@ -60,7 +60,7 @@ def detect_imposter(site_text: list, threshold: int, amount:int) -> bool:
 def reset_csv():
     with open('detection.csv', 'w', newline='', encoding='utf-8') as outfile:
                     writer = csv.writer(outfile)
-                    writer.writerow(['url','expected','response','threshold'])
+                    writer.writerow(['url','expected','response','threshold', 'amount', 'correct'])
 
 def test_urls(url_dict:dict) -> None:
     with open('detection.csv', 'a', newline='', encoding='utf-8') as outfile:
@@ -73,7 +73,7 @@ def test_urls(url_dict:dict) -> None:
                     for url in url_dict:
                         text = get_url_text(url)
                         detected = detect_imposter(text, t, a)
-                        writer.writerow([url, url_dict[url], detected, t])
+                        writer.writerow([url, url_dict[url], detected, t, a, url_dict[url]==detected])
                         if url_dict[url] == detected:
                             correct += 1
                     file.write(f"\n\nThreshold: {t}")
