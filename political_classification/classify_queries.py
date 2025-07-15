@@ -2,7 +2,7 @@ import csv
 import requests
 import json
 
-# use LMStudio to load a model and score articles
+# use LMStudio to load a model and categorize queries
 
 SYSTEM_PROMPT = """
 You are a political science expert. You are given a search query and need to evaluate its nature as political or not political.
