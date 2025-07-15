@@ -10,10 +10,12 @@ Return ONLY a single-line JSON object in this format:
 { \"nature\": \"potentially political\" | \"non political\" }
 Respond with no explanation, no extra text.
 """
+
 EXAMPLES = (
-    "What to look for: Is the query political in nature? Is it related to the process of making decisions, exercising power, and governing within a community or society?\n"
-    "Potentially political: '', '', ''\n"
-    "Non-political: '', '', ''\n")
+"What to look for: Is the query political in nature? Is it related to the process of making decisions, exercising power, and governing within a community or society?\n"
+"Potentially political: 'What are the key policies of the Democratic and Republican parties?', 'Election results', 'Impact of climate change legislation on the economy', 'gun laws', 'voting rights'\n"
+"Non-political: 'Best exercises for lower back pain relief', 'How to bake sourdough bread at home', 'Top 10 tourist attractions in Japan', 'youtube', 'cat breeds'\n"
+)
 
 def assess_query(query: str):
     try:
@@ -43,7 +45,6 @@ def assess_query(query: str):
     except Exception as e:
         print("Request error:", e)
         return None
-
 
 def extract_nature_from_content(content: str) -> str:
     # Find first '{' and last '}' to extract JSON substring
@@ -80,7 +81,8 @@ csv.field_size_limit(new_limit)
 if __name__ == "__main__":
     with open("query_collection.csv", "r", encoding="utf-8") as infile:
         reader = csv.reader(infile)
-        with open("queries_categorized.csv", "w", encoding="utf-8", newline="") as outfile:
+        with open("queries_categorized.csv", "w", encoding="utf-8",
+                  newline="") as outfile:
             writer = csv.writer(outfile)
             writer.writerow(["query", "category", "nature"])
             next(reader)
